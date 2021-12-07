@@ -34,19 +34,20 @@ const UserSchema = Schema({
 
 UserSchema.methods.toJSON = function() {
     
-    const { __v, password, ...user } = this.toObject();
+    const { __v, _id, password, ...user } = this.toObject();
+    user.uid = _id;
     return user;
 }
 
 module.exports = model( 'User', UserSchema );
 
-const params = {
-    name:'',
-    email:'sdfs@sdfs.com',
-    password:'sdf323',
-    img:'sdfsdf_url',
-    role:'sdfwse',
-    status: false,
-    google: false
-}
+// const params = {
+//     name:'',
+//     email:'sdfs@sdfs.com',
+//     password:'sdf323',
+//     img:'sdfsdf_url',
+//     role:'sdfwse',
+//     status: false,
+//     google: false
+// }
 

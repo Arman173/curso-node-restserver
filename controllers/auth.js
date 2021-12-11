@@ -3,6 +3,8 @@ const { request, response } = require('express');
 
 const User = require('../models/user');
 const { generateJWT } = require('../helpers/generate-jwt');
+const { googleVerify } = require('../helpers/google-verify');
+const { json } = require('express/lib/response');
 
 const login = async( req = request, res = response ) => {
 
@@ -51,6 +53,58 @@ const login = async( req = request, res = response ) => {
 
 }
 
+
+const googleSignIn = async( req = request, res = response ) => {
+
+    const { id_token } = req.body;
+
+    try {
+
+        const { email, name, img } = await googleVerify( id_token );
+
+        let user = await User.findOne({ email });
+
+        if ( !user ) {
+            // hay que crear el usuario
+            const data = {
+                name,
+                email,
+                password: ';)',
+                img,
+                google: true
+            };
+            
+            user = new User( data );
+            await user.save();
+        }
+        
+        // si el usuario en DB
+        if ( !user.status ) {
+            return res.status(401).json({
+                msg: 'Talk to administrator, user locked'
+            });
+        }
+
+        // generar el JWT
+        const token = await generateJWT( user._id );
+
+
+        res.json({
+            user,
+            token
+        });
+        
+    } catch ( error ) {
+        res.status(400).json({
+            ok: false,
+            msg: 'token could not be verificate'
+        });
+    }
+
+}
+
+
 module.exports = {
     login,
+    googleSignIn
 }

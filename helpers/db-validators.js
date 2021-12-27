@@ -1,11 +1,14 @@
-const Role = require('../models/role');
-const User = require('../models/user');
+const { User, Role, Category, Product } = require('../models');
 
-
+/*
+** USERS VALIDATORS
+*/
 const isRoleValid = async( role = '' ) => {
     
+    // verificamos si el role esta registrado en la base de datos
     const roleExists = await Role.findOne({ role });
     if ( !roleExists ) {
+        // si no existe entonces mandaremos un error
         throw new Error(`role ${ role } is not registered in the database`);
     }
 }
@@ -21,15 +24,53 @@ const emailExists = async( email = '' ) => {
 
 const userExistsById = async( id = '' ) => {
 
-    // Verificar si el correo existe
+    // Verificar si el id existe
     const userExist = await User.findById( id );
     if( !userExist ) {
-        throw new Error(`id: ${ id } don't exist`);
+        throw new Error(`user id: ${ id } don't exist`);
+    }
+}
+
+
+/*
+** CATEGORIES VALIDATORS
+*/
+const categoryExistsById = async( id = '' ) => {
+
+    // Verificar si el id existe
+    const categoryExist = await Category.findById( id );
+    if( !categoryExist ) {
+        throw new Error(`category id: ${ id } don't exist`);
+    }
+}
+
+// const categoryExistsByName = async( name = '' ) => {
+
+//     // Verificar si el name existe
+//     const categoryExist = await Category.findOne( { name: name.toUpperCase() } );
+//     if( categoryExist ) {
+//         throw new Error(`name: ${ name } already exist`);
+//     }
+// }
+
+/*
+** PRODUCTS VALIDATORS
+*/
+const productExistsById = async( id = '' ) => {
+
+    // Verificar si el id existe
+    const productExist = await Product.findById( id );
+    if( !productExist ) {
+        throw new Error(`product id: ${ id } don't exist`);
     }
 }
 
 module.exports = {
     isRoleValid,
     emailExists,
-    userExistsById
+    userExistsById,
+    categoryExistsById,
+    productExistsById
+    //categoryExistsByName
+    //isCategoryValid
 }

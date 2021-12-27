@@ -5,11 +5,17 @@ const { validateFields, validateJWT, isAdminRole, hasRole } = require('../middle
 
 const { isRoleValid, emailExists, userExistsById } = require('../helpers/db-validators');
 
-const { userGet, userPost, userPut, userPatch, userDelete } = require('../controllers/user');
+const { usersGet, userPost, userPut, userPatch, userDelete, getUser } = require('../controllers/user');
 
 const router = Router();
 
-router.get('/', userGet);
+router.get('/', usersGet);
+
+router.get('/:id', [
+    check('id', 'invalid ID').isMongoId(),
+    check('id').custom( userExistsById ),
+    validateFields
+], getUser);
 
 router.post('/', [
     check('name', 'name is require').not().isEmpty(),
@@ -22,6 +28,7 @@ router.post('/', [
 ], userPost);
 
 router.put('/:id', [
+    validateJWT,
     check('id', 'invalid ID').isMongoId(),
     check('id').custom( userExistsById ),
     check('role').custom( isRoleValid ),

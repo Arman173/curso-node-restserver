@@ -53,6 +53,12 @@ const login = async( req = request, res = response ) => {
 
 }
 
+const authenticate = async( req = request, res = response ) => {
+
+    const user = await User.findById( req.user._id );
+
+    res.status(200).json( user );
+}
 
 const googleSignIn = async( req = request, res = response ) => {
 
@@ -106,5 +112,6 @@ const googleSignIn = async( req = request, res = response ) => {
 
 module.exports = {
     login,
+    authenticate,
     googleSignIn
 }

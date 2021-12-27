@@ -3,7 +3,7 @@ const bcryptjs = require('bcryptjs');
 
 const User = require('../models/user');
 
-const userGet = async( req = request, res = response ) => {
+const usersGet = async( req = request, res = response ) => {
 
     // const { q, name = 'No name', id, apikey } = req.query;
     const { limit = 5, from = 0 } = req.query;
@@ -20,6 +20,15 @@ const userGet = async( req = request, res = response ) => {
         total,
         users
     });
+}
+
+const getUser = async( req = request, res = response ) => {
+
+    const { id } = req.params;
+
+    const user = await User.findById( id );
+
+    res.json( user );
 }
 
 const userPost = async( req, res = response ) => {
@@ -75,7 +84,8 @@ const userDelete = async( req, res = response ) => {
 
 
 module.exports = {
-    userGet,
+    usersGet,
+    getUser,
     userPost,
     userPut,
     userPatch,

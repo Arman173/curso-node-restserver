@@ -65,12 +65,28 @@ const productExistsById = async( id = '' ) => {
     }
 }
 
+/*
+** COllections VALIDATORS
+*/
+const validCollections = ( collection = '', collections = [] ) => {
+
+    const include = collections.includes( collection );
+
+    if( !include ) {
+        throw new Error(`collection: ${ collection } in not valid, ${ collections }`);
+    }
+
+    return true;
+}
+
+
 module.exports = {
     isRoleValid,
     emailExists,
     userExistsById,
     categoryExistsById,
-    productExistsById
+    productExistsById,
+    validCollections
     //categoryExistsByName
     //isCategoryValid
 }
